@@ -28,7 +28,6 @@ function signIn() {
     let pass = getPass();
     signInWithEmailAndPassword(auth, user, pass)
         .then((userCredential) => {
-            const user = userCredential.user;
             document.location.href = "graph.html";
         })
         .catch((error) => {
@@ -39,22 +38,4 @@ function signIn() {
         });
 }
 
-function authSignOut() {
-    signOut(auth).then(() => {
-        showLoggedOutView();
-    }).catch((error) => {
-        console.error(error.message)
-    });
-}
-
-function isLoggedIn() {
-    let user = auth.currentUser;
-    if(user) {
-        return true;
-    }
-    return false;
-}
-
 button.addEventListener("click", signIn);
-
-export { authSignOut, isLoggedIn }

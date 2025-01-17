@@ -1,3 +1,17 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCrTRA1OqClyqoeF3qtdnH63QT3N9dh0Wg",
+    authDomain: "project-c12c6.firebaseapp.com",
+    projectId: "project-c12c6",
+    storageBucket: "project-c12c6.firebasestorage.app",
+    messagingSenderId: "403135006428",
+    appId: "1:403135006428:web:96e95ea04d8fee9f159619"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 var pricesN = [];
 var yearsN = [];
 var pricesM = [];
@@ -73,10 +87,27 @@ function createChart() {
         }
     });
 }
-getDataNvidia()
-.then(getDataMeta)
-.then(getDataAmazon)
-.then(createChart)
-.catch(error => {
-    console.error("Error fetching data:" + error);
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        if(localStorage.getItem("refresh") != null) {
+            signOut(auth).then(() => {
+                localStorage.removeItem("refresh");
+                document.location.href = "index.html";
+            }).catch((error) => {
+                console.error(error);
+            });
+        } else {
+            localStorage.setItem("refresh", "false");
+        }
+        getDataNvidia()
+        .then(getDataMeta)
+        .then(getDataAmazon)
+        .then(createChart)
+        .catch(error => {
+            console.error(error);
+        });
+    } else {
+        document.location.href = "index.html";
+    }
 });
